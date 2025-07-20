@@ -43,11 +43,10 @@ while True:
 
         current_usage = get_storage_usage(dir_path)
         if current_usage + file_size > MAX_STORAGE:
-            state = 'error'
-            raise Exception('最大容量を超えています')
+            raise Exception('max storage over')
 
         if file_size == 0:
-            raise Exception('No data to read from client.')
+            raise Exception('No data')
         
         # 次に、クライアントからファイル名を読み取り、変数に格納します。JSONデータがある場合は、サポートされていないため、例外が発生します。受信するデータがない場合、コードは例外を発生させます。
         filename = connection.recv(file_name_len).decode('utf-8')
@@ -66,7 +65,7 @@ while True:
                     file_size -= len(data)
                     print(file_size)
         except Exception as file_err:
-            state = 'error'
+            state = 'error in upload'
             print(f'ファイル書き込み中にエラー:{file_err}')
         
         state = 'success'
@@ -74,8 +73,8 @@ while True:
         
 
     except Exception as e:
-        state = 'error'
-        print('Error: ' + str(e))
+        state = str(e)
+        print('Error: ' + state)
 
     finally:
         connection.send(state.encode('utf-8'))

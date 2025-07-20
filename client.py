@@ -18,10 +18,10 @@ except socket.error as err:
     sys.exit(1)
 
 try:
-    filepath = input('アップロードするmp4ファイルを入力してください\n')
+    filepath = input('Input filePath to upload\n')
 
     if filepath[-3:].lower() != 'mp4':
-        raise Exception('ファイルはmp4にしてください')
+        raise Exception('file have to be mp4')
 
     # バイナリモードでファイルを読み込む
     with open(filepath, 'rb') as f:
@@ -50,18 +50,16 @@ try:
             print("Sending...")
             sock.send(data)
             data = f.read(1400)
+        
+        state_msg = sock.recv(16).decode('utf-8')
+        print(state_msg)
 
 except FileNotFoundError as nofile_err:
-    print('入力されたファイルが存在しません')
+    print('inputFile not found')
 
 except Exception as e:
     print('Error: ' + str(e))
 
 finally:
-    state_msg = sock.recv(16).decode('utf-8')
-    if state_msg == 'success':
-        print('ファイルのアップロードが成功しました')
-    else:
-        print('ファイルのアップロードが失敗しました')
     print('closing socket')
     sock.close()
