@@ -6,8 +6,6 @@ def protocol_header(file_size, file_name_len):
     return  file_size.to_bytes(8, "big") + file_name_len.to_bytes(1,"big")
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-# サーバが待ち受けているポートにソケットを接続します
 server_address = '127.0.0.1'
 server_port = 9001
 print('connecting to {}'.format(server_address, server_port))
@@ -20,7 +18,6 @@ except socket.error as err:
     sys.exit(1)
 
 try:
-    # filepath = 'input/sample1.mp4'
     filepath = input('アップロードするmp4ファイルを入力してください\n')
 
     # バイナリモードでファイルを読み込む
@@ -31,25 +28,20 @@ try:
         f.seek(0,0)
 
         if filesize > pow(2,32):
-            raise Exception('File must be below 4GB.')
+            raise Exception('ファイルは4GB以下にしてください')
 
         filename = os.path.basename(f.name)
-
         # ファイル名からビット数
         filename_bits = filename.encode('utf-8')
-        print(filename_bits)
-
         # protocol_header()関数を用いてヘッダ情報を作成し、ヘッダとファイル名をサーバに送信します。
         header = protocol_header(filesize, len(filename_bits))
-        print(header)
 
         # ヘッダの送信
         sock.send(header)
-
         # ファイル名の送信
         sock.send(filename_bits)
 
-        # 一度に4096バイト（4096ビット）ずつ読み出し、送信することにより、ファイルを送信します。Readは読み込んだビットを返します
+        # 一度に1400バイトずつ読み出し、送信することにより、ファイルを送信します。Readは読み込んだビットを返します
         data = f.read(1400)
         while data:
             print("Sending...")
