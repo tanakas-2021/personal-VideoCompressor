@@ -1,13 +1,18 @@
 import socket
 import sys
 import os
+import json
 
 def protocol_header(file_size, file_name_len):
     return  file_size.to_bytes(8, "big") + file_name_len.to_bytes(1,"big")
 
+with open('config.json', 'r', encoding='utf-8') as f:
+    config = json.load(f)
+server_address = config['server_address']
+server_port = config['server_port']
+stream_rate = config['stream_rate']
+
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_address = '127.0.0.1'
-server_port = 9001
 print('connecting to {}'.format(server_address, server_port))
 
 try:
@@ -45,11 +50,11 @@ try:
         sock.send(filename_bits)
 
         # 一度に1400バイトずつ読み出し、送信することにより、ファイルを送信します。Readは読み込んだビットを返します
-        data = f.read(1400)
+        data = f.read(stream_rate)
         while data:
             print("Sending...")
             sock.send(data)
-            data = f.read(1400)
+            data = f.read(stream_rate)
         
         state_msg = sock.recv(16).decode('utf-8')
         print(state_msg)
