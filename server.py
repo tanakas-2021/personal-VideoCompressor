@@ -16,6 +16,7 @@ server_address = config['server_address']
 server_port = config['server_port']
 max_storage = config['max_storage']
 dir_path = config['storage_dir']
+stream_rate = config['stream_rate']
 
 # アドレスファミリ : socket.AF_INET
 # 通信方式 : SOCK_STREAM = TCP通信（信頼性あり、順番保証、コネクション型）
@@ -35,7 +36,6 @@ while True:
         # 最初の8バイトをファイルサイズとして取得
         file_size = int.from_bytes(header[:8], 'big')
         file_name_len = int.from_bytes(header[8:9], 'big')
-        stream_rate = 1400
         state = ''
         print(f'file size is{file_size}')
 
