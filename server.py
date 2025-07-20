@@ -48,6 +48,8 @@ while True:
         
         # 次に、クライアントからファイル名を読み取り、変数に格納します。JSONデータがある場合は、サポートされていないため、例外が発生します。受信するデータがない場合、コードは例外を発生させます。
         filename = connection.recv(file_name_len).decode('utf-8')
+        if not re.match(r'^[\\w\\-.]+$', filename):
+            raise Exception('Invalid filename')
         print('Filename: {}'.format(filename))
         
         # 次に、コードはクライアントから受け取ったファイル名で新しいファイルをフォルダに作成します。このファイルは、withステートメントを使用してバイナリモードで開かれ、write()関数を使用して、クライアントから受信したデータをファイルに書き込みます。データはrecv()関数を使用して塊単位で読み込まれ、データの塊を受信するたびにデータ長がデクリメントされます。
