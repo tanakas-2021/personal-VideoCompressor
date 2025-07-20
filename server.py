@@ -29,6 +29,7 @@ while True:
         file_size = int.from_bytes(header[:8], 'big')
         file_name_len = int.from_bytes(header[8:9], 'big')
         stream_rate = 1400
+        state = ''
         print(f'ファイルサイズは{file_size}, ファイル名の長さは{file_name_len}')
 
         if file_size == 0:
@@ -51,14 +52,19 @@ while True:
                     file_size -= len(data)
                     print(file_size)
         except Exception as file_err:
+            state = 'error'
             print(f'ファイル書き込み中にエラー:{file_err}')
         
+        state = 'success'
         print('Finished downloading the file from client.')
+        
 
     except Exception as e:
+        state = 'error'
         print('Error: ' + str(e))
 
     finally:
+        connection.send(state.encode('utf-8'))
         print("Closing current connection")
         connection.close()
         

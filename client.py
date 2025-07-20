@@ -50,6 +50,12 @@ try:
             print("Sending...")
             sock.send(data)
             data = f.read(1400)
+        
+        state_msg = sock.recv(16).decode('utf-8')
+        if state_msg == 'success':
+            print('ファイルのアップロードが成功しました')
+        else:
+            print('ファイルのアップロードが失敗しました')
 
 finally:
     print('closing socket')
