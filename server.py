@@ -24,12 +24,12 @@ if not os.path.exists(dir_path):
 # socketにソケットファイルをバインドし、listenする
 sock.bind((server_address, server_port))
 sock.listen(1)
-print(f'サーバーが起動しました：ソケットファイルは{server_address}です。クライアントからのリクエスを待機中')
+print('server is starting：waiting from clients')
 
 while True:
     connection, client_address = sock.accept()
     try:
-        print(f'クライアント:{client_address}から接続がありました')
+        print(f'connecting from client')
 
         # 8Byte:ファイルサイズの大きさ
         header = connection.recv(9)
@@ -39,7 +39,7 @@ while True:
         file_name_len = int.from_bytes(header[8:9], 'big')
         stream_rate = 1400
         state = ''
-        print(f'ファイルサイズは{file_size}, ファイル名の長さは{file_name_len}')
+        print(f'file size is{file_size}')
 
         current_usage = get_storage_usage(dir_path)
         if current_usage + file_size > MAX_STORAGE:
@@ -66,12 +66,11 @@ while True:
                     print(file_size)
         except Exception as file_err:
             state = 'error in upload'
-            print(f'ファイル書き込み中にエラー:{file_err}')
+            print(f'error in uploading file :{file_err}')
         
         state = 'success'
         print('Finished downloading the file from client.')
         
-
     except Exception as e:
         state = str(e)
         print('Error: ' + state)

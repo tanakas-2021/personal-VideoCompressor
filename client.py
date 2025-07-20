@@ -31,7 +31,7 @@ try:
         f.seek(0,0)
 
         if filesize > pow(2,32):
-            raise Exception('ファイルは4GB以下にしてください')
+            raise Exception('file have to be below 4GB')
 
         filename = os.path.basename(f.name)
         # ファイル名からビット数
