@@ -20,7 +20,8 @@ except socket.error as err:
     sys.exit(1)
 
 try:
-    filepath = 'input/sample1.mp4'
+    # filepath = 'input/sample1.mp4'
+    filepath = input('アップロードするmp4ファイルを入力してください\n')
 
     # バイナリモードでファイルを読み込む
     with open(filepath, 'rb') as f:
