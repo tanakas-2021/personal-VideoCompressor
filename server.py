@@ -6,6 +6,15 @@ import os
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = '127.0.0.1'
 server_port = 9001
+MAX_STORAGE = 4 * 1024 ** 4 # 4TB
+
+def get_storage_usage(dir_path:str) -> int:
+    total = 0
+    for dir_path, dirnames, filenames in os.walk(dir_path):
+        for f in filenames:
+            fp = os.path.join(dir_path, f)
+            total += os.path.getsize(fp)
+    return total
 
 # mp4を保存するdirPath
 dir_path = 'storage'
@@ -31,6 +40,11 @@ while True:
         stream_rate = 1400
         state = ''
         print(f'ファイルサイズは{file_size}, ファイル名の長さは{file_name_len}')
+
+        current_usage = get_storage_usage(dir_path)
+        if current_usage + file_size > MAX_STORAGE:
+            state = 'error'
+            raise Exception('最大容量を超えています')
 
         if file_size == 0:
             raise Exception('No data to read from client.')
