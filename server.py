@@ -64,9 +64,9 @@ while True:
         except Exception as file_err:
             state = 'error in upload'
             print(f'error in uploading file :{file_err}')
-        
-        state = 'success'
-        print('Finished downloading the file from client.')
+        else:
+            state = 'success'
+            print('Finished downloading the file from client.')
         
     except Exception as e:
         state = str(e)
