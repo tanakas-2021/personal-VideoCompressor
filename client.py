@@ -20,6 +20,9 @@ except socket.error as err:
 try:
     filepath = input('アップロードするmp4ファイルを入力してください\n')
 
+    if filepath[-3:].lower() != 'mp4':
+        raise Exception('ファイルはmp4にしてください')
+
     # バイナリモードでファイルを読み込む
     with open(filepath, 'rb') as f:
         # ファイルの末尾に移動し、tellは開いているファイルの現在位置を返します。ファイルのサイズを取得するために使用します
