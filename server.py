@@ -41,14 +41,17 @@ while True:
         
         # 次に、コードはクライアントから受け取ったファイル名で新しいファイルをフォルダに作成します。このファイルは、withステートメントを使用してバイナリモードで開かれ、write()関数を使用して、クライアントから受信したデータをファイルに書き込みます。データはrecv()関数を使用して塊単位で読み込まれ、データの塊を受信するたびにデータ長がデクリメントされます。
         # w+は終了しない場合はファイルを作成し、そうでない場合はデータを切り捨てます
-        with open(os.path.join(dir_path, filename),'wb+') as f:
-            # すべてのデータの読み書きが終了するまで、クライアントから読み込まれます
-            while file_size > 0:
-                data = connection.recv(file_size if file_size <= stream_rate else stream_rate)
-                f.write(data)
-                print('recieved {} bytes'.format(len(data)))
-                file_size -= len(data)
-                print(file_size)
+        try:
+            with open(os.path.join(dir_path, filename),'wb+') as f:
+                # すべてのデータの読み書きが終了するまで、クライアントから読み込まれます
+                while file_size > 0:
+                    data = connection.recv(file_size if file_size <= stream_rate else stream_rate)
+                    f.write(data)
+                    print('recieved {} bytes'.format(len(data)))
+                    file_size -= len(data)
+                    print(file_size)
+        except Exception as file_err:
+            print(f'ファイル書き込み中にエラー:{file_err}')
         
         print('Finished downloading the file from client.')
 
